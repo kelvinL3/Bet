@@ -5,13 +5,37 @@ body {
 }
 .jumbotron{
 	text-align: center;
-	color: red;
+	background-image: url('../images/newyork.jpg');
+	color: white;
 }
-.btn-lg{
+.btn-default{
 	font-size: 24px;
+	text-align: center;
+}
+ul.nav {
+	font-size: 16px;
+	font-family: 'Slabo 27px', serif;
 }
 
+.mainTitle{
+	font-size: 20px;
+	font-family: 'Slabo 27px', serif;
+}
+
+.jumbotron h1{
+	font-family: 'Nixie One', cursive;
+	border: 5px solid;
+	
+
+}
 .jumbotron p{
-	color: yellow;
+	font-weight: 100;
+	padding: .5px;
 }
-
+.container h2{
+	text-align: center;
+}
+.container p{
+	font-size: 20px;
+	text-align: center;
+}

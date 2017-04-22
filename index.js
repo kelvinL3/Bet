@@ -1,6 +1,19 @@
 var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-facebook').Strategy;
+var MongoClient = require('mongodb').MongoClient
+var assert = require('assert');
+var ensurer = require('connect-ensure-login');
+
+// Connection URL
+var url = 'mongodb://capen:bettingapp@ds133418.mlab.com:33418/bettingapp';
+
+// Use connect method to connect to the server
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  console.log("Connected successfully to server");
+
+
 
 
 // Configure the Facebook strategy for use by Passport.
@@ -81,14 +94,53 @@ app.get('/login/facebook/return',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
   	console.log("User is logged in now: " + JSON.stringify(req.user));
+  	db.collection('users').find({
+  		id: req.user.id
+  	}).toArray(function(err, docs) {
+  		console.log(docs);
+  		if (err) {
+  			console.log(err);
+  		} else if (docs.length == 0) {
+  	    	db.collection('users').insert({
+  			id: req.user.id,
+  			displayName: req.user.displayName
+  			});
+  			//Create Bank Account w/ ID, Credit Card Type, nickname: displayname, rewards 0, balance 100, accountnumber ID
+  		}
+  	});
+
     res.redirect('/');
   });
 
 app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
+  ensurer.ensureLoggedIn(),
   function(req, res){
-    res.render('profile', { user: req.user });
+    //res.render('profile', { user: req.user });
+    res.send("User: " + JSON.stringify(req.user));
   });
 
+app.get('/bets', ensurer.ensureLoggedIn(), function(req, res) {
+
+	var bets = [];
+
+	db.collection('bets').find({
+		better: req.user.displayName
+	}).toArray(function(err, docs) {
+		bets.append(docs);
+	});
+
+	db.collection('bets').find({
+		bettee: req.user.displayName
+	}).toArray(function(err, docs) {
+		bets.append(docs);
+	});
+
+	res.send("Bets: " + JSON.stringify(bets));
+
+});
+
 app.listen(3000);
-console.log("i love you aaron and i want to have your bbies!!!");
+//console.log("i love you aaron and i want to have your bbies!!!");
+
+  //db.close();
+});
