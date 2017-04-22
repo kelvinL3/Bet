@@ -105,6 +105,7 @@ app.get('/login/facebook/return',
   			id: req.user.id,
   			displayName: req.user.displayName
   			});
+  			//Create Bank Account w/ ID, Credit Card Type, nickname: displayname, rewards 0, balance 100, accountnumber ID
   		}
   	});
 
@@ -117,8 +118,26 @@ app.get('/profile',
     res.render('profile', { user: req.user });
   });
 
+app.get('/bets', ensurer.ensureLoggedIn(), function(req, res) {
+
+	var bets = [];
+
+	db.collection('bets').find({
+		better: req.user.displayName
+	}).toArray(function(err, docs) {
+		bets.append(docs);
+	});
+
+	db.colection('bets').find({
+		bettee: req.user.displayName
+	}).toArray(function(err, docs) {
+		bets.append(docs);
+	});
+
+});
+
 app.listen(3000);
-console.log("i love you aaron and i want to have your bbies!!!");
+//console.log("i love you aaron and i want to have your bbies!!!");
 
   //db.close();
 });
