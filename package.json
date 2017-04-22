@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/kelvinL3/Bet/issues"
   },
-  "homepage": "https://github.com/kelvinL3/Bet#readme"
+  "homepage": "https://github.com/kelvinL3/Bet#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
 }
