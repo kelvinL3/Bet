@@ -3,6 +3,7 @@ var passport = require('passport');
 var Strategy = require('passport-facebook').Strategy;
 var MongoClient = require('mongodb').MongoClient
 var assert = require('assert');
+var ensurer = require('connect-ensure-login');
 
 // Connection URL
 var url = 'mongodb://capen:bettingapp@ds133418.mlab.com:33418/bettingapp';
@@ -93,11 +94,25 @@ app.get('/login/facebook/return',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
   	console.log("User is logged in now: " + JSON.stringify(req.user));
+  	db.collection('users').find({
+  		id: req.user.id
+  	}).toArray(function(err, docs) {
+  		console.log(docs);
+  		if (err) {
+  			console.log(err);
+  		} else if (docs.length == 0) {
+  	    	db.collection('users').insert({
+  			id: req.user.id,
+  			displayName: req.user.displayName
+  			});
+  		}
+  	});
+
     res.redirect('/');
   });
 
 app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
+  ensurer.ensureLoggedIn(),
   function(req, res){
     res.render('profile', { user: req.user });
   });
