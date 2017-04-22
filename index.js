@@ -1,6 +1,18 @@
 var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-facebook').Strategy;
+var MongoClient = require('mongodb').MongoClient
+var assert = require('assert');
+
+// Connection URL
+var url = 'mongodb://capen:bettingapp@ds133418.mlab.com:33418/bettingapp';
+
+// Use connect method to connect to the server
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  console.log("Connected successfully to server");
+
+
 
 
 // Configure the Facebook strategy for use by Passport.
@@ -92,3 +104,6 @@ app.get('/profile',
 
 app.listen(3000);
 console.log("i love you aaron and i want to have your bbies!!!");
+
+  //db.close();
+});
