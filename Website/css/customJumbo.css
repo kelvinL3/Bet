@@ -5,13 +5,22 @@ body {
 }
 .jumbotron{
 	text-align: center;
-	color: red;
+	
 }
 .btn-lg{
 	font-size: 24px;
 }
+ul.nav{
+	font-size: 16px;
+	font-family: 'Slabo 27px', serif;
+}
 
-.jumbotron p{
-	color: yellow;
+
+
+.jumbotron h1{
+	font-family: 'Nixie One', cursive;
+	border: 5px solid;
+	background-color: grey;
+
 }
 
