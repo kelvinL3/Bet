@@ -1,0 +1,19 @@
+{
+  "name": "bettingapp",
+  "version": "1.0.0",
+  "description": "Make Bets with Friends!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kelvinL3/Bet.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kelvinL3/Bet/issues"
+  },
+  "homepage": "https://github.com/kelvinL3/Bet#readme"
+}
