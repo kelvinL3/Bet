@@ -1,3 +1,29 @@
+ /* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+.jumbotron{
+	text-align: center;
+	
+}
+.btn-lg{
+	font-size: 24px;
+}
+ul.nav{
+	font-size: 16px;
+	font-family: 'Slabo 27px', serif;
+}
+
+
+
+.jumbotron h1{
+	font-family: 'Nixie One', cursive;
+	border: 5px solid;
+	
+
+}
+
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
