@@ -115,7 +115,8 @@ app.get('/login/facebook/return',
 app.get('/profile',
   ensurer.ensureLoggedIn(),
   function(req, res){
-    res.render('profile', { user: req.user });
+    //res.render('profile', { user: req.user });
+    res.send("User: " + JSON.stringify(req.user));
   });
 
 app.get('/bets', ensurer.ensureLoggedIn(), function(req, res) {
@@ -128,11 +129,13 @@ app.get('/bets', ensurer.ensureLoggedIn(), function(req, res) {
 		bets.append(docs);
 	});
 
-	db.colection('bets').find({
+	db.collection('bets').find({
 		bettee: req.user.displayName
 	}).toArray(function(err, docs) {
 		bets.append(docs);
 	});
+
+	res.send("Bets: " + JSON.stringify(bets));
 
 });
 
