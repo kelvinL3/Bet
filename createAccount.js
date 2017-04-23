@@ -1,5 +1,52 @@
 var request = require("request");
 
+module.exports = {
+	createAccount: function(fbid, name, callback){ 
+		var num = fbid;
+		var actnumb = num.toString();
+		var body = {
+		  "type": "Savings",
+		  "nickname": name,
+		  "rewards": 0,
+		  "balance": 100,
+		  "account_number": actnumb
+		}
+		createAccount("58fbc923a73e4942cdafd541", body, callback);
+	},
+	withdraw: function(fbid, amount, callback) {
+		var num = fbid;
+		var actnumb = num.toString();
+		var date = new Date();
+		var body = {
+	  	"medium": "balance",
+	  	"transaction_date": date.getFullYear()  + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+	  	"amount": amount,
+	  	"description": "string"
+	  	}
+		getAccount(fbid, function(err, res) {
+			console.log("withdrawing " + res._id);
+			withdraw(res._id, body, callback);
+		})
+	},
+	deposit: function(fbid, amount, callback){
+		var num = fbid;
+		var actnumb = num.toString();
+		var date = new Date();
+		var body = {
+		  "medium": "balance",
+		  "transaction_date": date.getFullYear()  + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+		  "amount": amount,
+		  "description": "string"
+		}
+
+		getAccount(fbid, function(err, res) {
+			console.log("depositing " + res._id);
+			deposit(res._id, body, callback);
+		})
+	}
+
+};
+
 function createAccount(id,body,callback){
 	var baseURL = "http://api.reimaginebanking.com/customers/$id/accounts?key=5fd4a56f088983646d783535f830b417"
 	var requestURL = baseURL.replace(/\$id/g, id);
@@ -120,13 +167,7 @@ var body = {
 }
 
 
-FcreateAccount(1547012816666319,"Aaron Kau", function() {
-	console.log("done");
-});
 
-FwithDraw(1547012816666319, 25, function() {
-	console.log("done");
-});
 
 function deposit(id, body,callback){
 	var baseURL = "http://api.reimaginebanking.com/accounts/$id/deposits?key=5fd4a56f088983646d783535f830b417"
@@ -163,7 +204,7 @@ var body = {
 //	console.log(body);
 //})
 
-fdeposit(1547012816666319, 3, function(err,body){
+/*fdeposit(1547012816666319, 3, function(err,body){
 	console.log(body);
 })
-
+*/

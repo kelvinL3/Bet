@@ -1,4 +1,5 @@
 const login = require("facebook-chat-api");
+var jay = require('./createAccount.js');
 var config = require('./config.js')
 var flag1 = false;
 var flag1a = false;
@@ -22,6 +23,8 @@ var currentThread = 0;
 var whichWon = -1;
 var iii = -1;
 var currentstep=0;
+
+console.log(jay.withdraw);
 
 //this is a callback, the input to the callback is the output of the function 
 var x = function (err, api) { 
