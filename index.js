@@ -5,7 +5,7 @@ var MongoClient = require('mongodb').MongoClient
 var assert = require('assert');
 var ensurer = require('connect-ensure-login');
 var request = require('request')
-var jay = require('createAccount.js')
+var jay = require('./createAccount.js')
 
 // Connection URL
 var url = 'mongodb://capen:bettingapp@ds133418.mlab.com:33418/bettingapp';
