@@ -1,6 +1,8 @@
 const login = require("facebook-chat-api");
 var jay = require('./createAccount.js');
 var config = require('./config.js')
+var MongoClient = require('mongodb').MongoClient
+
 var flag1 = false;
 var flag1a = false;
 var flag2 = false;
@@ -24,6 +26,11 @@ var whichWon = -1;
 var iii = -1;
 var currentstep=0;
 
+
+var url = 'mongodb://capen:bettingapp@ds133418.mlab.com:33418/bettingapp';
+
+// Use connect method to connect to the server
+MongoClient.connect(url, function(err, db) {
 //console.log(jay.withdraw);
 
 //this is a callback, the input to the callback is the output of the function 
@@ -103,9 +110,9 @@ var x = function (err, api) {
                 var temp = id
                 if (temp===currentP1ID) {
                     api.sendMessage(canJudge + " has decided that " + fullname + " is the winner of the bet! Congratulations!", message.threadID);
-                    jay.deposit(currentP1ID, 2*money, function(err, response){
+                    jay.deposit(currentP1ID, 2*money, null);
 
-                    });
+                        
                     whichWon=1;
                 } else if (temp===currentP2ID) {
                     api.sendMessage(canJudge + " has decided that " + fullname + " is the winner of the bet! Congratulations!", message.threadID);
@@ -116,6 +123,28 @@ var x = function (err, api) {
                 } else {
                     console.log("error!")
                 }
+                	getName(api, currentP1ID, function(err, p1) {
+                    	getName(api, currentP2ID, function(err, p2){ 
+
+                    		var winnerName;
+                    		if(whichWon==1){ winnerName=p1;}
+                    			else if(whichWon==2){winnerName=p2;}
+
+                    			var date = new Date();
+                    		db.collection('bets').insert({
+	                    		date: date.getFullYear()  + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+		                    	betee: p2,
+		                    	better:p1,
+		                    	amount: money,
+		                    	reason: betString,
+		                    	winner: winnerName
+
+
+                    		});
+                    		
+                    	})
+                    })
+
                 });
             }
         })
@@ -255,6 +284,8 @@ var x = function (err, api) {
 // Create simple echo bot
 login({email: config.fb_user, password: config.fb_pass}, x); // fucntion takes in obj email/pass and a callback;
 
+
+});
 function getID(api, name, threadID, callback) {
 	var found = false;
     api.getThreadInfo(threadID, function(err, info) {
@@ -288,7 +319,5 @@ function getName(api, userID, callback) {
         }
     });
 }
-
-
 
 
