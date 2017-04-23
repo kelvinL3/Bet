@@ -7,8 +7,12 @@ var currentP1ID = 0;
 var currentP2ID = 0;
 var money = null;
 var canJudge = 0;
-var fin
+var finJudge = 0;
 var binary =-1;
+var Cstep = false;
+var f1 = false;
+var f2 = false;
+var finalConfirmation = false;
 var currentThread = 0;
 
 //this is a callback, the input to the callback is the output of the function 
@@ -81,10 +85,41 @@ var x = function (err, api) {
 			}
     	}
     	if (flag3===true&&(((message.senderID===currentP1ID)&&(i===1))||((message.senderID===currentP2ID)&&(i===0)))) { //to confirm with other person
-    		canJudge=message.body
+    		canJudge=message.body;
 			flag3 =false;
-			api.sendMessage("The final judge is " + canJudge, message.threadID);
+			finJudge=canJudge;
+			api.sendMessage("The final judge is " + finJudge, message.threadID);
+			Cstep = true;
     	}
+    	if ((Cstep===true)&&(message.senderID===currentP1ID||message.senderID===currentP2ID)) {
+	    	if ((tokens[0]==="yes")&&(message.senderID===currentP1ID)) {
+	    		f1="yes";
+	    	}
+	    	if ((tokens[0]==="yes")&&(message.senderID===currentP2ID)) {
+	    		f2="yes";
+	    	}
+	    	if (f1==="yes"&&f2==="yes") {
+				api.sendMessage("Everyone has agreed! Bet has started!" + canJudge, message.threadID);
+				Cstep=false;
+				f1=false;
+				f2=false;
+				finalConfirmation=true;
+	    	} else {
+	    		if (f1=="yes") {
+	    			api.sendMessage("f1 has agreed!" + canJudge, message.threadID);
+	    		} else if (f2=="yes") {
+					api.sendMessage("f2 has agreed!" + canJudge, message.threadID);
+	    		} else {
+	    			api.sendMessage("No one has agreed" + canJudge, message.threadID);
+	    		}
+	    	}
+	    }
+
+
+
+
+
+
     	api.sendMessage("---",message.threadID);
         //api.sendMessage(message.body+"  "+message.senderID, message.threadID);
     });
