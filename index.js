@@ -4,6 +4,7 @@ var Strategy = require('passport-facebook').Strategy;
 var MongoClient = require('mongodb').MongoClient
 var assert = require('assert');
 var ensurer = require('connect-ensure-login');
+var request = require('request')
 
 // Connection URL
 var url = 'mongodb://capen:bettingapp@ds133418.mlab.com:33418/bettingapp';
@@ -138,6 +139,26 @@ app.get('/bets', ensurer.ensureLoggedIn(), function(req, res) {
 	res.send("Bets: " + JSON.stringify(bets));
 
 });
+
+app.get('/test', function (req, res, next){
+  var num = "58fbc925a73e4942cdafd544";
+  var id = num.toString();
+var body = {
+  "medium": "balance",
+  "transaction_date": Date().toString(),
+  "amount": "1",
+  "description": "string"
+  }
+
+  var baseURL = "http://api.reimaginebanking.com/accounts/$id/withdrawals?key=5fd4a56f088983646d783535f830b417"
+  var requestURL = baseURL.replace(/\$id/g, id);
+  request.post({
+    url: requestURL,
+    json: body
+  },function hape(error, response){
+    console.log(response);
+  })
+  });
 
 app.listen(3000);
 //console.log("i love you aaron and i want to have your bbies!!!");
