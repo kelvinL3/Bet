@@ -69,7 +69,7 @@ function createAccount(id,body,callback){
 
 function FcreateAccount(fbid, name, callback) {
 	var num = fbid;
-	var actnumb = num.toString();
+	var actnumb = pad(num,16);
 var body = {
   "type": "Savings",
   "nickname": name,
@@ -164,7 +164,7 @@ function withdraw(id, body,callback){
 
 function fwithdraw(fbid, amount, callback) {
 	var num = fbid;
-	var actnumb = num.toString();
+	var actnumb = pad(num,16);
 	var date = new Date();
 var body = {
   "medium": "balance",
@@ -174,7 +174,7 @@ var body = {
 }
 
 
-	getAccount(fbid, function(err, res) {
+	getAccount(actnumb, function(err, res) {
 		console.log("withdrawing " + res._id);
 		withdraw(res._id, body, callback);
 	})
@@ -199,7 +199,7 @@ function deposit(id, body,callback){
 
 function fdeposit(fbid, amount, callback) {
 	var num = fbid;
-	var actnumb = num.toString();
+	var actnumb = pad(num,16);
 	var date = new Date();
 var body = {
   "medium": "balance",
@@ -208,7 +208,7 @@ var body = {
   "description": "string"
 }
 
-	getAccount(fbid, function(err, res) {
+	getAccount(actnumb, function(err, res) {
 		console.log("depositing " + res._id);
 		deposit(res._id, body, callback);
 	})
@@ -229,19 +229,18 @@ var body = {
 
 
 
-/*FcreateAccount(1547012816666319, "aaron", function(err,res){
+FcreateAccount(0100002922009264, "Riya Prabhudesai", function(err,res){
 	console.dir("1 " + res);
-})*/
-/*fwithdraw(1547012816666319, 2, function(err,body){
-	console.log("2 " + body);
-})*/
-
-FcreateAccount(1547012816666312, "aaron", function(err,res){
-	console.dir("3 " +res);
+	fwithdraw(0100002922009264, 2, function(err,body){
+		console.log("2 " + body);
+	})
 })
 
+
+
+
 function pad(n, width, z) {
-  z = z || '0';
+  z = z || '1';
   n = n + '';
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
