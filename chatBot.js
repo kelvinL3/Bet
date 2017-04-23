@@ -259,7 +259,7 @@ var x = function (err, api) {
 		}
 		
 	} else if (currentstep == 4) {
-        api.sendMessage(iii + " " + canJudge, message.threadID);
+        //api.sendMessage(iii + " " + canJudge, message.threadID);
     }
 	if ((!bool)&&(currentstep==3/*flag2===true*/&&(message.senderID===currentP1ID||message.senderID===currentP2ID))) { //to assign the judge, requires flag1 if sequence to happen already
 		canJudge=message.body
