@@ -70,7 +70,7 @@ app.use(require('morgan')('combined'));
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-
+app.use(express.static('public'))
 // Initialize Passport and restore authentication state, if any, from the
 // session.
 app.use(passport.initialize());
@@ -83,6 +83,40 @@ app.get('/',
     res.render('home', { user: req.user });
   });
 
+app.get('/about',
+  function(req, res) {
+    res.render('about', { user: req.user });
+  });
+
+app.get('/history', ensurer.ensureLoggedIn(),
+  function(req, res) {
+    console.log("DISPLAY NAME : " + req.user.displayName)
+    var ret = [];
+        db.collection('bets').find({
+      better: req.user.displayName
+    }).toArray(function(err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+                ret = ret.concat(docs);
+                console.log("docs: " + JSON.stringify(docs));
+                db.collection('bets').find({
+                    betee: req.user.displayName
+                }).toArray(function(err, docs) {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      console.log("docs2: " + docs);
+                      ret = ret.concat(docs);
+                      console.log('bets returned: ' + ret)
+                      res.render('history', { user: req.user, bets: ret });
+              }
+            });
+      }
+    });
+    
+  });
+
 app.get('/login',
   function(req, res){
     res.render('login');
@@ -92,7 +126,7 @@ app.get('/login/facebook',
   passport.authenticate('facebook'));
 
 app.get('/login/facebook/return', 
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
   	console.log("User is logged in now: " + JSON.stringify(req.user));
   	db.collection('users').find({
@@ -169,6 +203,11 @@ app.get('/test', function (req, res, next){
 
     })
   });
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 app.listen(3000);
 //console.log("i love you aaron and i want to have your bbies!!!");
