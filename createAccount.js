@@ -48,6 +48,7 @@ module.exports = {
 
 	getBalance: function(name, callback){
 	var requestURL = "http://api.reimaginebanking.com/accounts/?key=5fd4a56f088983646d783535f830b417"
+	var balance = 100
   request.get({
     url: requestURL
   }, function(error, response){
