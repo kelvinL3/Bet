@@ -111,7 +111,7 @@
               <tbody>
                 <% console.log("aslkdfhasdkjfhaksdljfhakdlsjfhlksjafh" + bets) %>
                 <% for (var i=0;i<bets.length;i++) { %>
-                        <tr background-color: <%=  bets[i].winner == 'user.displayName' ? #71ef5d : 'red' %> >
+                        <tr background-color: <%=  bets[i].winner == user.displayName ? '#71ef5d' : 'red' %> >
                             <td><%= bets[i].date%></td>
                             <td><%= bets[i].betee%></td>
                             <td><%= bets[i].better%></td>
