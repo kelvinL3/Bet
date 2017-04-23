@@ -5,6 +5,7 @@ var MongoClient = require('mongodb').MongoClient
 var assert = require('assert');
 var ensurer = require('connect-ensure-login');
 var request = require('request')
+var jay = require('createAccount.js')
 
 // Connection URL
 var url = 'mongodb://capen:bettingapp@ds133418.mlab.com:33418/bettingapp';
@@ -109,7 +110,11 @@ app.get('/history', ensurer.ensureLoggedIn(),
                       console.log("docs2: " + docs);
                       ret = ret.concat(docs);
                       console.log('bets returned: ' + ret)
-                      res.render('history', { user: req.user, bets: ret });
+                      
+                      jay.getBalance(req.user.displayName, function(err, balance) {
+                        res.render('history', { user: req.user, bets: ret, balance:balance });
+                      })
+
               }
             });
       }
@@ -159,6 +164,8 @@ app.get('/profile',
 app.get('/bets', ensurer.ensureLoggedIn(), function(req, res) {
 
 	var bets = [];
+
+
 
 	db.collection('bets').find({
 		better: req.user.displayName
