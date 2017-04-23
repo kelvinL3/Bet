@@ -111,6 +111,7 @@ var body = {
   "description": "string"
 }
 
+
 	getAccount(fbid, function(err, res) {
 		console.log("withdrawing " + res._id);
 		withdraw(res._id, body, callback);
@@ -119,6 +120,13 @@ var body = {
 }
 
 
+FcreateAccount(1547012816666319,"Aaron Kau", function() {
+	console.log("done");
+});
+
+FwithDraw(1547012816666319, 25, function() {
+	console.log("done");
+});
 
 function deposit(id, body,callback){
 	var baseURL = "http://api.reimaginebanking.com/accounts/$id/deposits?key=5fd4a56f088983646d783535f830b417"
