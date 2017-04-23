@@ -218,7 +218,7 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-app.listen(process.env.port || 3000);
+app.listen(process.env.PORT || 3000);
 //console.log("i love you aaron and i want to have your bbies!!!");
 
   //db.close();
