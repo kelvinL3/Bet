@@ -64,17 +64,25 @@ var x = function (err, api) {
     	}
 
     	if (tokens[0].valueOf()==="betinfo".valueOf()){
-    		api.sendMessage("Player 1: "+currentP1ID+"Player 2: "+currentP2ID+"for this amount: "+money, message.threadID);
+	    	getName(api, currentP1ID, function(err, res) {
+			getName(api, currentP2ID, function(err, res2) {
+			jay.getBalance(res,function(err,bal1) {
+			jay.getBalance(res2, function(err,bal2) {
+    			api.sendMessage("Player 1: "+res+"Player 2: "+res2+" who have these amounts, already ("+bal1+", "+ bal2 +") for this amount: "+money, message.threadID);
+			})
+			})
+			})
+			})
     	}
     	
     	//-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
-		if (tokens[0].valueOf()==="exit".valueOf()) { //cancel bet
+		if (tokens[0]==="exit"||tokens[0]==="close"||tokens[0]==="clear"||tokens[0]==="stop") { //cancel bet
     		flag1 = false;
 			flag1a = false;
 			flag2 = false;
 			flag3 = false;
 
-			currentstep=0;
+			currentflag = 0;
 
 			currentP1ID = 0;
 			betString = null;
@@ -89,7 +97,8 @@ var x = function (err, api) {
 			finalConfirmation = false;
 			currentThread = 0;
 			whichWon = -1;
-            iii=-1;
+			iii = -1;
+			currentstep=0;
     		api.sendMessage("Reset!", message.threadID);
 		}
     	//BETS START HERE!!!
@@ -239,20 +248,27 @@ var x = function (err, api) {
 		}
 	}
 	if (currentstep==2/*flag1===true*/&&message.senderID==currentP1ID) { //to prompt for the amount of money
-		if (isNaN(message.body)) {
-			api.sendMessage("Error, not a number! Try again! (quit to start over)", message.threadID);
-		} else {
+		getName(api, currentP1ID, function(err, res) {
+		getName(api, currentP2ID, function(err, res2) {
+		jay.getBalance(res,function(err,bal1) {
+		jay.getBalance(res2, function(err,bal2) {
+			if (isNaN(message.body)) {
+				api.sendMessage("Error, not a number! Try again! (quit to start over)", message.threadID);
+			} else if (bal1-parseInt(message.body)) {
+				api.sendMessage(res + "does not have sufficient funds. Use a lower number.", message.threadID);
+			} else if (bal2-parseInt(message.body)) {
+				api.sendMessage(res2 +"does not have sufficient funds. Use a lower number.", message.threadID);
+			} else {
 		   		money = message.body;
 		   		flag1=false;
 		   		flag2=true;
 		   		currentstep++;
-                getName(api, currentP1ID, function(err, res) {
-                    getName(api, currentP2ID, function(err, res2) {
-                        api.sendMessage(res+" or "+ res2 +", please name a judge", message.threadID);
-                    })
-                })
-		   		
-		}
+	            api.sendMessage(res+" or "+ res2 +", please name a judge.", message.threadID);
+			}
+		})
+		})
+		})
+		})
 	}
 	if (tokens[0].valueOf()==="outcome".valueOf()&&/*(flag1a===true)*/currentstep==1&&(message.senderID==currentP1ID)) { //add condition player 1 must be the one to enter
 		api.sendMessage("Start a bet for how much? (number)", message.threadID);
@@ -291,7 +307,7 @@ var x = function (err, api) {
 	//console.log(currentstep + " " + 1)
 	//console.log(message.senderID + " " + currentP1ID);
 	//console.log(currentstep);
-    api.sendMessage("---",message.threadID);
+    //api.sendMessage("---",message.threadID);
         //api.sendMessage(message.body+"  "+message.senderID, message.threadID);
     });
 }
