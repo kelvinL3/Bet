@@ -52,6 +52,7 @@ function createAccount(id,body,callback){
 	getAccount(body.account_number, function(err, res) {
 		if (res != null) {
 			console.log("res is not null")
+			callback("already exists");
 			return;
 		}
 				var baseURL = "http://api.reimaginebanking.com/customers/$id/accounts?key=5fd4a56f088983646d783535f830b417"
@@ -225,16 +226,6 @@ var body = {
 })
 */
 
-
-
-
-
-FcreateAccount(0100002922009264, "Riya Prabhudesai", function(err,res){
-	console.dir("1 " + res);
-	fwithdraw(0100002922009264, 2, function(err,body){
-		console.log("2 " + body);
-	})
-})
 
 
 

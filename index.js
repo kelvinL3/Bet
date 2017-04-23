@@ -119,7 +119,9 @@ app.get('/history', ensurer.ensureLoggedIn(),
 
 app.get('/login',
   function(req, res){
-    res.render('login');
+
+    res.send('<meta http-equiv="refresh" content="0; url=/" /><script>alert("You\'re not logged in!")</script>');
+    //res.end();
   });
 
 app.get('/login/facebook',
