@@ -1,6 +1,8 @@
 const login = require("facebook-chat-api");
 var jay = require('./createAccount.js');
 var config = require('./config.js')
+var MongoClient = require('mongodb').MongoClient
+
 var flag1 = false;
 var flag1a = false;
 var flag2 = false;
@@ -24,6 +26,11 @@ var whichWon = -1;
 var iii = -1;
 var currentstep=0;
 
+
+var url = 'mongodb://capen:bettingapp@ds133418.mlab.com:33418/bettingapp';
+
+// Use connect method to connect to the server
+MongoClient.connect(url, function(err, db) {
 //console.log(jay.withdraw);
 
 //this is a callback, the input to the callback is the output of the function 
@@ -103,9 +110,9 @@ var x = function (err, api) {
                 var temp = id
                 if (temp===currentP1ID) {
                     api.sendMessage(canJudge + " has decided that " + fullname + " is the winner of the bet! Congratulations!", message.threadID);
-                    jay.deposit(currentP1ID, 2*money, function(err, response){
+                    jay.deposit(currentP1ID, 2*money, null);
 
-                    });
+                        
                     whichWon=1;
                 } else if (temp===currentP2ID) {
                     api.sendMessage(canJudge + " has decided that " + fullname + " is the winner of the bet! Congratulations!", message.threadID);
@@ -116,6 +123,28 @@ var x = function (err, api) {
                 } else {
                     console.log("error!")
                 }
+                	getName(api, currentP1ID, function(err, p1) {
+                    	getName(api, currentP2ID, function(err, p2){ 
+
+                    		var winnerName;
+                    		if(whichWon==1){ winnerName=p1;}
+                    			else if(whichWon==2){winnerName=p2;}
+
+                    			var date = new Date();
+                    		db.collection('bets').insert({
+	                    		date: date.getFullYear()  + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+		                    	betee: p2,
+		                    	better:p1,
+		                    	amount: money,
+		                    	reason: betString,
+		                    	winner: winnerName
+
+
+                    		});
+                    		
+                    	})
+                    })
+
                 });
             }
         })
@@ -130,7 +159,7 @@ var x = function (err, api) {
     		f2="yes";
     	}
     	if (f1==="yes"&&f2==="yes") {
-			api.sendMessage("Everyone has agreed! Bet has started!" + canJudge +"\r\nJudge, enter \"win: player\" to confirm the winner.", message.threadID);
+			api.sendMessage("Everyone has agreed on the judge! Bet has started!" + canJudge +"\r\nJudge, enter \"win: player name\" to confirm the winner.", message.threadID);
 					  
 
 			getName(api, currentP2ID, function(err, name) {
@@ -160,9 +189,9 @@ var x = function (err, api) {
 			finalConfirmation=true;
     	} else {
     		if (f1=="yes") {
-    			api.sendMessage("f1 has agreed!" + canJudge, message.threadID);
+    			api.sendMessage("Player One has agreed!" + canJudge, message.threadID);
     		} else if (f2=="yes") {
-				api.sendMessage("f2 has agreed!" + canJudge, message.threadID);
+				api.sendMessage("Player Two has agreed!" + canJudge, message.threadID);
     		} else {
     			api.sendMessage("No one has agreed" + canJudge, message.threadID);
     		}
@@ -173,10 +202,10 @@ var x = function (err, api) {
 			flag3 =false;
 			currentstep++;
 			finJudge=canJudge;
-			api.sendMessage("The final judge is " + finJudge, message.threadID);
+			api.sendMessage("The judge is " + finJudge, message.threadID);
 			Cstep = true;
 		} else if (message.body==="no") {
-			api.sendMessage("Player1, please nominate another judge" + finJudge, message.threadID);
+			api.sendMessage("Player One, please nominate another judge" + finJudge, message.threadID);
             currentstep--;
 		}
 		
@@ -212,7 +241,7 @@ var x = function (err, api) {
 		}
 	}
 	if (tokens[0].valueOf()==="outcome".valueOf()&&/*(flag1a===true)*/currentstep==1&&(message.senderID==currentP1ID)) { //add condition player 1 must be the one to enter
-		api.sendMessage("Start a bet for how much? (give a number)", message.threadID);
+		api.sendMessage("Start a bet for how much? (number)", message.threadID);
 		flag1 = true;
 		flag1a = false;
 		currentstep+=1;
@@ -220,7 +249,7 @@ var x = function (err, api) {
 
 	}
 	if (tokens[0].valueOf()==="bet".valueOf()) {
-		api.sendMessage("Please enter the winning condition for your bet. Enter \"outcome (outcome)\"", message.threadID);
+		api.sendMessage("Please enter the winning condition or description of your bet. Enter \"outcome (outcome)\"", message.threadID);
 		flag1 = true;
 		currentstep+=1;
 		//getName(api, message.senderID, function(err, obj) {
@@ -255,6 +284,8 @@ var x = function (err, api) {
 // Create simple echo bot
 login({email: config.fb_user, password: config.fb_pass}, x); // fucntion takes in obj email/pass and a callback;
 
+
+});
 function getID(api, name, threadID, callback) {
 	var found = false;
     api.getThreadInfo(threadID, function(err, info) {
@@ -288,7 +319,5 @@ function getName(api, userID, callback) {
         }
     });
 }
-
-
 
 

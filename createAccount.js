@@ -156,8 +156,9 @@ function withdraw(id, body,callback){
 		url: requestURL,
 		json: body
 	},function hap(error, response, wbody){
-		if (callback)
+		if (callback){
 			callback(error, body);
+		}
 	})
 }
 
