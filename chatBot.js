@@ -16,6 +16,15 @@ var x = function (err, api) {
     if(err) {
     	return console.error(err);
 	}
+    //EXAMPLE USAGE OF GETNAME AND GETID
+    /*getName(api, 100000728466267, function(err, name) {
+        console.log(name);
+    });
+    getID(api, "Aaron Kau", 1492866947455267, function(err, id) {
+        console.log(id);
+    });*/
+
+
 
 	//api.setOptions({listenEvents: true})
     api.listen(function(err, message) {
@@ -92,6 +101,35 @@ var x = function (err, api) {
 // Create simple echo bot
 login({email: config.fb_user, password: config.fb_pass}, x); // fucntion takes in obj email/pass and a callback;
 
+function getID(api, name, threadID, callback) {
+    api.getThreadInfo(threadID, function(err, info) {
+        if (err) {
+            callback(err);
+            return;
+        } else {
+            api.getUserInfo(info.participantIDs, function(err, obj) {
+                info.participantIDs.forEach(function(id) {
+                    if (obj[id].name == name) {
+                        callback(null, id);
+                        return;
+                    }
+                });
+            });
+        }
+        callback("Unable to find ID");
+        return;
+    });
+}
 
+function getName(api, userID, callback) {
+    api.getUserInfo(userID, function(err, obj) {
+        if (err) {
+            callback(err);
+            return;
+        } else {
+            callback(null, obj[userID].name);
+        }
+    });
+}
 
 
