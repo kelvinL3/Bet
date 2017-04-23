@@ -110,7 +110,9 @@ var x = function (err, api) {
                 var temp = id
                 if (temp===currentP1ID) {
                     api.sendMessage(canJudge + " has decided that " + fullname + " is the winner of the bet! Congratulations!", message.threadID);
-                    jay.deposit(currentP1ID, 2*money, null);
+                    jay.deposit(currentP1ID, 2*money, function(err, response) {
+
+                    });
 
                         
                     whichWon=1;
@@ -161,14 +163,20 @@ var x = function (err, api) {
     	if (f1==="yes"&&f2==="yes") {
 			api.sendMessage("Everyone has agreed on the judge! Bet has started!" + canJudge +"\r\nJudge, enter \"win: player name\" to confirm the winner.", message.threadID);
 					  
-
+			console.log("MONEY : " + money + " MONEY AS INT " + parseInt(money));
 			getName(api, currentP2ID, function(err, name) {
-				
-				console.log(id2);
 				var id2 = parseInt(currentP2ID)
+				console.log(id2);
+				
 			  jay.createAccount(id2, name, function(err, body){
-			  	jay.withdraw(id2, money, null);
-			  	console.log("created 2 " + err + " body: " + JSON.stringify(body));
+			  	console.log("1 " + body);
+			  	//jay.withdraw(id2, 3, function(err, body) {
+			  	//	console.log("2 "  + JSON.stringify(body));
+			  	//});
+			  	jay.withdraw(id2, parseInt(money), function(err, body) {
+			  		console.log("2 " + JSON.stringify(body))
+			  	})
+			  	//console.log("created 2 " + err + " body: " + JSON.stringify(body));
 			  }); 
 			});
 			console.log("hi");
@@ -178,8 +186,14 @@ var x = function (err, api) {
 				var id1 = parseInt(currentP1ID)
 				console.log(id1);
 			  jay.createAccount(id1, name, function(err, body){
-			  	jay.withdraw(id1, money, null);
-			  	console.log("created 1 " + err + " body: " + JSON.stringify(body));
+			  	console.log("3 " + body);
+			  	//jay.withdraw(id1, 3, function(err, body) {
+			    //	console.log("4 " + JSON.stringify(body));
+			  	//});
+			  	jay.withdraw(id1, parseInt(money), function(err, body) {
+			  		console.log("4 " + JSON.stringify(body))
+			  	})
+			  	//console.log("created 1 " + err + " body: " + JSON.stringify(body));
 			  }); 
 			});
 			
@@ -273,10 +287,10 @@ var x = function (err, api) {
 		});
 		//currentP2ID = tokens[1];
 	}
-	console.log(tokens[0] + " outcome")
-	console.log(currentstep + " " + 1)
-	console.log(message.senderID + " " + currentP1ID);
-	console.log(currentstep);
+	//console.log(tokens[0] + " outcome")
+	//console.log(currentstep + " " + 1)
+	//console.log(message.senderID + " " + currentP1ID);
+	//console.log(currentstep);
     api.sendMessage("---",message.threadID);
         //api.sendMessage(message.body+"  "+message.senderID, message.threadID);
     });
