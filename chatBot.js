@@ -159,7 +159,7 @@ var x = function (err, api) {
     		f2="yes";
     	}
     	if (f1==="yes"&&f2==="yes") {
-			api.sendMessage("Everyone has agreed! Bet has started!" + canJudge +"\r\nJudge, enter \"win: player\" to confirm the winner.", message.threadID);
+			api.sendMessage("Everyone has agreed on the judge! Bet has started!" + canJudge +"\r\nJudge, enter \"win: player name\" to confirm the winner.", message.threadID);
 					  
 
 			getName(api, currentP2ID, function(err, name) {
@@ -189,9 +189,9 @@ var x = function (err, api) {
 			finalConfirmation=true;
     	} else {
     		if (f1=="yes") {
-    			api.sendMessage("f1 has agreed!" + canJudge, message.threadID);
+    			api.sendMessage("Player One has agreed!" + canJudge, message.threadID);
     		} else if (f2=="yes") {
-				api.sendMessage("f2 has agreed!" + canJudge, message.threadID);
+				api.sendMessage("Player Two has agreed!" + canJudge, message.threadID);
     		} else {
     			api.sendMessage("No one has agreed" + canJudge, message.threadID);
     		}
@@ -202,10 +202,10 @@ var x = function (err, api) {
 			flag3 =false;
 			currentstep++;
 			finJudge=canJudge;
-			api.sendMessage("The final judge is " + finJudge, message.threadID);
+			api.sendMessage("The judge is " + finJudge, message.threadID);
 			Cstep = true;
 		} else if (message.body==="no") {
-			api.sendMessage("Player1, please nominate another judge" + finJudge, message.threadID);
+			api.sendMessage("Player One, please nominate another judge" + finJudge, message.threadID);
             currentstep--;
 		}
 		
@@ -241,7 +241,7 @@ var x = function (err, api) {
 		}
 	}
 	if (tokens[0].valueOf()==="outcome".valueOf()&&/*(flag1a===true)*/currentstep==1&&(message.senderID==currentP1ID)) { //add condition player 1 must be the one to enter
-		api.sendMessage("Start a bet for how much? (give a number)", message.threadID);
+		api.sendMessage("Start a bet for how much? (number)", message.threadID);
 		flag1 = true;
 		flag1a = false;
 		currentstep+=1;
@@ -249,7 +249,7 @@ var x = function (err, api) {
 
 	}
 	if (tokens[0].valueOf()==="bet".valueOf()) {
-		api.sendMessage("Please enter the winning condition for your bet. Enter \"outcome (outcome)\"", message.threadID);
+		api.sendMessage("Please enter the winning condition or description of your bet. Enter \"outcome (outcome)\"", message.threadID);
 		flag1 = true;
 		currentstep+=1;
 		//getName(api, message.senderID, function(err, obj) {
