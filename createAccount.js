@@ -20,9 +20,9 @@ var body = {
   "nickname": name,
   "rewards": 0,
   "balance": 100,
-  "account_number": actnumb;
+  "account_number": actnumb
 }
-createAccount(("58fbc923a73e4942cdafd541", body, callback);
+createAccount("58fbc923a73e4942cdafd541", body, callback);
 }
 
 /*
@@ -64,7 +64,7 @@ function withdraw(id, body,callback){
 	})
 }
 
-function FwithDraw(fbid, name, amount, callback) {
+function FwithDraw(fbid, amount, callback) {
 	var num = fbid;
 	var actnumb = num.toString();
 var body = {
@@ -74,10 +74,17 @@ var body = {
   "description": "string"
 }
 
-withdraw((actnumb, body, callback);
+withdraw(actnumb, body, callback);
 }
 
 
+FcreateAccount(1547012816666319,"Aaron Kau", function() {
+	console.log("done");
+});
+
+FwithDraw(1547012816666319, 25, function() {
+	console.log("done");
+});
 
 
 
