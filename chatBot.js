@@ -24,7 +24,7 @@ var whichWon = -1;
 var iii = -1;
 var currentstep=0;
 
-console.log(jay.withdraw);
+//console.log(jay.withdraw);
 
 //this is a callback, the input to the callback is the output of the function 
 var x = function (err, api) { 
@@ -103,10 +103,16 @@ var x = function (err, api) {
                 var temp = id
                 if (temp===currentP1ID) {
                     api.sendMessage(canJudge + " has decided that " + fullname + " is the winner of the bet! Congratulations!", message.threadID);
+                    jay.deposit(currentP1ID, 2*money, function(err, response){
+
+                    });
                     whichWon=1;
                 } else if (temp===currentP2ID) {
                     api.sendMessage(canJudge + " has decided that " + fullname + " is the winner of the bet! Congratulations!", message.threadID);
                     whichWon=2;
+                    jay.deposit(currentP2ID, 2*money, function(err, response){
+
+                    });
                 } else {
                     console.log("error!")
                 }
@@ -125,6 +131,29 @@ var x = function (err, api) {
     	}
     	if (f1==="yes"&&f2==="yes") {
 			api.sendMessage("Everyone has agreed! Bet has started!" + canJudge +"\r\nJudge, enter \"win: player\" to confirm the winner.", message.threadID);
+					  
+
+			getName(api, currentP2ID, function(err, name) {
+				
+				console.log(id2);
+				var id2 = parseInt(currentP2ID)
+			  jay.createAccount(id2, name, function(err, body){
+			  	jay.withdraw(id2, money, null);
+			  	console.log("created 2 " + err + " body: " + JSON.stringify(body));
+			  }); 
+			});
+			console.log("hi");
+				
+			getName(api, currentP1ID, function(err, name) {
+
+				var id1 = parseInt(currentP1ID)
+				console.log(id1);
+			  jay.createAccount(id1, name, function(err, body){
+			  	jay.withdraw(id1, money, null);
+			  	console.log("created 1 " + err + " body: " + JSON.stringify(body));
+			  }); 
+			});
+			
 			Cstep=false;
 			f1=false;
 			f2=false;
@@ -259,5 +288,7 @@ function getName(api, userID, callback) {
         }
     });
 }
+
+
 
 
