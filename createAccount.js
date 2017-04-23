@@ -142,7 +142,25 @@ function getAccount(fbid, callback){
 
 
 	}
-
+function getBalance(name, callback){
+	var requestURL = "http://api.reimaginebanking.com/accounts/?key=5fd4a56f088983646d783535f830b417"
+  request.get({
+    url: requestURL
+  }, function(error, response){
+    var id = "-1";
+    var js = JSON.parse(response.body);
+    //console.log("Getting Account. JSON: " + response.body)
+    for(var x=0;x<js.length;x++){
+      if(js[x].account_number!=null&&js[x].nickname==name){
+        balance=js[x].balance;
+      }
+    }
+    //console.log(id);
+   
+    callback(null, balance);
+   
+	});
+}
 
 
 
@@ -228,14 +246,14 @@ var body = {
 
 
 
-
+/*
 FcreateAccount(0100002922009264, "Riya Prabhudesai", function(err,res){
 	console.dir("1 " + res);
 	fwithdraw(0100002922009264, 2, function(err,body){
 		console.log("2 " + body);
 	})
 })
-
+*/
 
 
 
@@ -244,6 +262,12 @@ function pad(n, width, z) {
   n = n + '';
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
+
+getBalance("Aaron Kau", function(err, balance){
+	console.log(balance);
+
+
+})
 
 
 
