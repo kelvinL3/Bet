@@ -252,12 +252,14 @@ var x = function (err, api) {
 		getName(api, currentP2ID, function(err, res2) {
 		jay.getBalance(res,function(err,bal1) {
 		jay.getBalance(res2, function(err,bal2) {
+		jay.createAccount(currentP1ID, res, function(err, body){
+		jay.createAccount(currentP2ID, res2, function(err, body){
 			if (isNaN(message.body)) {
 				api.sendMessage("Error, not a number! Try again! (quit to start over)", message.threadID);
-			} else if (bal1-parseInt(message.body)) {
-				api.sendMessage(res + "does not have sufficient funds. Use a lower number.", message.threadID);
-			} else if (bal2-parseInt(message.body)) {
-				api.sendMessage(res2 +"does not have sufficient funds. Use a lower number.", message.threadID);
+			} else if (bal1-parseInt(message.body)<0) {
+				api.sendMessage(res + " does not have sufficient funds. Use a lower number.", message.threadID);
+			} else if (bal2-parseInt(message.body)<0) {
+				api.sendMessage(res2 +" does not have sufficient funds. Use a lower number.", message.threadID);
 			} else {
 		   		money = message.body;
 		   		flag1=false;
@@ -265,6 +267,8 @@ var x = function (err, api) {
 		   		currentstep++;
 	            api.sendMessage(res+" or "+ res2 +", please name a judge.", message.threadID);
 			}
+		})
+		})
 		})
 		})
 		})
