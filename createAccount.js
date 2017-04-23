@@ -20,9 +20,9 @@ var body = {
   "nickname": name,
   "rewards": 0,
   "balance": 100,
-  "account_number": actnumb;
+  "account_number": actnumb
 }
-createAccount(("58fbc923a73e4942cdafd541", body, callback);
+createAccount("58fbc923a73e4942cdafd541", body, callback);
 }
 
 /*
@@ -50,10 +50,78 @@ else{
 
 
 	);  */
+function getAccount(fbid, callback){
+	var requestURL = "http://api.reimaginebanking.com/accounts/?key=5fd4a56f088983646d783535f830b417"
+  request.get({
+    url: requestURL
+  }, function(error, response){
+    var id = "-1";
+    var js = JSON.parse(response.body);
+    for(var x=0;x<js.length;x++){
+      if(js[x].account_number!=null&&js[x].account_number==fbid){
+        id=js[x]._id;
+      }
+    }
+    console.log(id);
+   
+    var moquestURL = "http://api.reimaginebanking.com/accounts/$id?key=5fd4a56f088983646d783535f830b417"
+    var morquestURL = moquestURL.replace("$id", id);
+    request.get({
+      url: morquestURL
+    }, function(error, response){
+      console.log(response.body);
+      callback(null, JSON.parse(response.body));
+    })
+
+		
+
+
+		})
+
+
+
+
+	}
+
+
+
+
 
 
 function withdraw(id, body,callback){
 	var baseURL = "http://api.reimaginebanking.com/accounts/$id/withdrawals?key=5fd4a56f088983646d783535f830b417"
+	var requestURL = baseURL.replace(/\$id/g, id);
+	//console.log(requestURL);
+	request.post({
+		url: requestURL,
+		json: body
+	},function hap(error, response, wbody){
+		callback(error, body);
+	})
+}
+
+function fwithdraw(fbid, amount, callback) {
+	var num = fbid;
+	var actnumb = num.toString();
+	var date = new Date();
+var body = {
+  "medium": "balance",
+  "transaction_date": date.getFullYear()  + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+  "amount": amount,
+  "description": "string"
+}
+
+	getAccount(fbid, function(err, res) {
+		console.log("withdrawing " + res._id);
+		withdraw(res._id, body, callback);
+	})
+//withdraw((actnumb, body, callback);
+}
+
+
+
+function deposit(id, body,callback){
+	var baseURL = "http://api.reimaginebanking.com/accounts/$id/deposits?key=5fd4a56f088983646d783535f830b417"
 	var requestURL = baseURL.replace(/\$id/g, id);
 	console.log(requestURL);
 	request.post({
@@ -64,22 +132,30 @@ function withdraw(id, body,callback){
 	})
 }
 
-function FwithDraw(fbid, name, amount, callback) {
+function fdeposit(fbid, amount, callback) {
 	var num = fbid;
 	var actnumb = num.toString();
+	var date = new Date();
 var body = {
   "medium": "balance",
-  "transaction_date": Date().toString(),
+  "transaction_date": date.getFullYear()  + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
   "amount": amount,
   "description": "string"
 }
 
-withdraw((actnumb, body, callback);
+	getAccount(fbid, function(err, res) {
+		console.log("depositing " + res._id);
+		deposit(res._id, body, callback);
+	})
+//withdraw((actnumb, body, callback);
 }
 
 
+//fwithdraw(1547012816666319, 25, function(err, body) {
+//	console.log(body);
+//})
 
-
-
-
+fdeposit(1547012816666319, 3, function(err,body){
+	console.log(body);
+})
 
