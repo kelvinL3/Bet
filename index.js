@@ -141,23 +141,33 @@ app.get('/bets', ensurer.ensureLoggedIn(), function(req, res) {
 });
 
 app.get('/test', function (req, res, next){
-  var num = "58fbc925a73e4942cdafd544";
-  var id = num.toString();
-var body = {
-  "medium": "balance",
-  "transaction_date": Date().toString(),
-  "amount": "1",
-  "description": "string"
-  }
+ var requestURL = "http://api.reimaginebanking.com/accounts/?key=5fd4a56f088983646d783535f830b417"
+ var fbid = "1547012816666319"
+  request.get({
+    url: requestURL
+  }, function(error, response){
+    
+    var id = "-1";
+    var js = JSON.parse(response.body);
+    for(var x=0;x<js.length;x++){
+      if(js[x].account_number!=null&&js[x].account_number==fbid){
+        id=js[x]._id;
+      }
+    }
+    //console.log(id);
+   
+    var moquestURL = "http://api.reimaginebanking.com/accounts/$id?key=5fd4a56f088983646d783535f830b417"
+    var morquestURL = moquestURL.replace("$id", id);
+    request.get({
+      url: morquestURL
+    }, function(error, response){
+      console.log(response.body);
+    })
 
-  var baseURL = "http://api.reimaginebanking.com/accounts/$id/withdrawals?key=5fd4a56f088983646d783535f830b417"
-  var requestURL = baseURL.replace(/\$id/g, id);
-  request.post({
-    url: requestURL,
-    json: body
-  },function hape(error, response){
-    console.log(response);
-  })
+   // callback(null, response);
+
+
+    })
   });
 
 app.listen(3000);
