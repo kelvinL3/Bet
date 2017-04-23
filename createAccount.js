@@ -48,15 +48,21 @@ module.exports = {
 };
 
 function createAccount(id,body,callback){
-	var baseURL = "http://api.reimaginebanking.com/customers/$id/accounts?key=5fd4a56f088983646d783535f830b417"
-	var requestURL = baseURL.replace(/\$id/g, id);
-	console.log(requestURL);
-	request.post({
-		url: requestURL,
-		json: body
-	},function hap(error, response, body){
-		callback(error, body);
-	}   )
+	getAccount(body.account_number, function(err, res) {
+		if (res != null) {
+			return;
+		}
+				var baseURL = "http://api.reimaginebanking.com/customers/$id/accounts?key=5fd4a56f088983646d783535f830b417"
+				var requestURL = baseURL.replace(/\$id/g, id);
+				console.log(requestURL);
+				request.post({
+					url: requestURL,
+					json: body
+				},function hap(error, response, body){
+					callback(error, body);
+				}   )
+	})
+
 }
 
 function FcreateAccount(fbid, name, callback) {
