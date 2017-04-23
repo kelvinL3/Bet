@@ -27,6 +27,9 @@ var iii = -1;
 var currentstep=0;
 
 
+var bool=false;
+var disagree = false;
+
 var url = 'mongodb://capen:bettingapp@ds133418.mlab.com:33418/bettingapp';
 
 // Use connect method to connect to the server
@@ -99,6 +102,8 @@ var x = function (err, api) {
 			whichWon = -1;
 			iii = -1;
 			currentstep=0;
+		    bool=false;
+		    disagree = false;
     		api.sendMessage("Reset!", message.threadID);
 		}
     	//BETS START HERE!!!
@@ -159,18 +164,23 @@ var x = function (err, api) {
                 });
             }
         })
-	    
-
-	    }
+	}
+	
 	if ((Cstep===true)&&(message.senderID===currentP1ID||message.senderID===currentP2ID)) { //to confirm
-    	if ((tokens[0]==="yes")&&(message.senderID===currentP1ID)) {
+    	if ((message.body==="yes")&&(message.senderID===currentP1ID)) {
     		f1="yes";
     	}
-    	if ((tokens[0]==="yes")&&(message.senderID===currentP2ID)) {
+    	if ((message.body==="yes")&&(message.senderID===currentP2ID)) {
     		f2="yes";
     	}
+    	if ((message.body==="no")&&(message.senderID===currentP1ID)) {
+    		f1="no";
+    	}
+    	if ((message.body==="no")&&(message.senderID===currentP2ID)) {
+    		f2="no";
+    	}
     	if (f1==="yes"&&f2==="yes") {
-			api.sendMessage("Everyone has agreed on the judge! Bet has started!" + canJudge +"\r\nJudge, enter \"win: player name\" to confirm the winner.", message.threadID);
+			api.sendMessage("Everyone has agreed on the judge!\r\nBet has started!"+"\r\nJudge " + canJudge +" enter \"win: player name\" to confirm the winner.", message.threadID);
 					  
 			console.log("MONEY : " + money + " MONEY AS INT " + parseInt(money));
 			getName(api, currentP2ID, function(err, name) {
@@ -178,7 +188,7 @@ var x = function (err, api) {
 				console.log(id2);
 				
 			  jay.createAccount(id2, name, function(err, body){
-			  	console.log("1 " + body);
+			  //	console.log("1 " + body);
 			  	//jay.withdraw(id2, 3, function(err, body) {
 			  	//	console.log("2 "  + JSON.stringify(body));
 			  	//});
@@ -211,35 +221,51 @@ var x = function (err, api) {
 			f2=false;
 			finalConfirmation=true;
     	} else {
-    		if (f1=="yes") {
-    			api.sendMessage("Player One has agreed!" + canJudge, message.threadID);
-    		} else if (f2=="yes") {
-				api.sendMessage("Player Two has agreed!" + canJudge, message.threadID);
-    		} else {
-    			api.sendMessage("No one has agreed" + canJudge, message.threadID);
-    		}
+    		getName(api, currentP1ID, function(err, res) {
+			getName(api, currentP2ID, function(err, res2) {
+	    		if ((f1=="no")&&(f2=="no")) {
+	    			api.sendMessage("No one has agreed on " + canJudge, message.threadID);
+	    		} else if ((f1=="yes")&&(f2=="no")) {
+					api.sendMessage(res2 + " has rejected! \r\nPlease nominate another judge.", message.threadID);
+					currentstep=3;
+					bool=true;
+					f1=false;
+					f2=false;
+	    		} else if ((f1=="no")&&(f2=="yes")) {
+	    			api.sendMessage(res + " has rejected! \r\nPlease nominate another judge.", message.threadID);
+	    			currentstep=3;
+	    			bool=true;
+	    			f1=false;
+	    			f2=false;
+	    		} //else if ((trap1===)&&(trap2===)) {
+	    		//	api.sendMessage("Error: "+res+" has entered " + f1 + " and " + res2 + " has entered " + f2+".", message.threadID);
+	    		//}
+    		})
+			})
     	}
     }
+    bool=false;
 	if (/*flag3===true*/currentstep==4&&(((message.senderID===currentP1ID)&&(iii===1))||((message.senderID===currentP2ID)&&(iii===0)))) { //to confirm with other person
 		if (canJudge===message.body) {
 			flag3 =false;
 			currentstep++;
 			finJudge=canJudge;
-			api.sendMessage("The judge is " + finJudge, message.threadID);
+			api.sendMessage("The judge is " + finJudge+".\r\nBoth players please type \"yes\" to confirm final bet!!!", message.threadID);
 			Cstep = true;
 		} else if (message.body==="no") {
-			api.sendMessage("Player One, please nominate another judge" + finJudge, message.threadID);
+			api.sendMessage("Player One, please nominate another judge.", message.threadID);
             currentstep--;
+            bool=true;
 		}
 		
 	} else if (currentstep == 4) {
         api.sendMessage(iii + " " + canJudge, message.threadID);
     }
-	if (currentstep==3/*flag2===true*/&&(message.senderID===currentP1ID||message.senderID===currentP2ID)) { //to assign the judge, requires flag1 if sequence to happen already
+	if ((!bool)&&(currentstep==3/*flag2===true*/&&(message.senderID===currentP1ID||message.senderID===currentP2ID))) { //to assign the judge, requires flag1 if sequence to happen already
 		canJudge=message.body
 		currentstep++;
 		flag3 =true;
-		api.sendMessage("The candidate judge is " + canJudge + "\r\nRecipient, enter \"no\" if you disagree, the name of the nominated judge if you agree", message.threadID);
+		api.sendMessage("The candidate judge is " + canJudge + ".\r\nRecipient, enter \"no\" if you disagree. Or enter the name of the nominated judge if you agree.", message.threadID);
 		flag2=false;
 		if (message.senderID===currentP1ID) {
 			iii=0;
@@ -283,7 +309,7 @@ var x = function (err, api) {
 
 	}
 	if (tokens[0].valueOf()==="bet".valueOf()) {
-		api.sendMessage("Please enter the winning condition or description of your bet. Enter \"outcome (outcome)\"", message.threadID);
+		api.sendMessage("Please enter the winning condition or description of your bet. \r\nEnter \"outcome (outcome)\"", message.threadID);
 		flag1 = true;
 		currentstep+=1;
 		//getName(api, message.senderID, function(err, obj) {
