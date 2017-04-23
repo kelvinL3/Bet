@@ -833,7 +833,7 @@ fieldset[disabled] .btn-theme {
 }
 
 .color-sky-light {
-  color: #fafafa;
+  color: #ffe2c3;
 }
 
 /*------------------------------------------------------------------
@@ -864,7 +864,7 @@ fieldset[disabled] .btn-theme {
 }
 
 .bg-color-sky-light {
-  background: #fafafa;
+  background: #ffe2c3;
 }
 
 /*------------------------------------------------------------------
@@ -1149,4 +1149,12 @@ fieldset[disabled] .btn-theme {
 
 .height-300 {
   height: 300px !important;
+}
+
+.bingomama {
+  background-color: #d4dcf7;
+}
+
+.yoyoyo{
+  background-color: #f77b60;
 }
