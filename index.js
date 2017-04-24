@@ -28,7 +28,7 @@ MongoClient.connect(url, function(err, db) {
 passport.use(new Strategy({
     clientID: 129421860934642,
     clientSecret: 'a06b980200e0265f0918736f18d4e68e',
-    callbackURL: 'http://ancient-reef-28636.herokuapp.com/login/facebook/return'
+    callbackURL: 'http://www.thebetbot.com/login/facebook/return'
   },
   function(accessToken, refreshToken, profile, cb) {
     // In this example, the user's Facebook profile is supplied as the user
