@@ -309,7 +309,7 @@ var x = function (err, api) {
 
 	}
 	if (tokens[0].valueOf()==="bet".valueOf()) {
-		api.sendMessage("Please enter the winning condition or description of your bet. \r\nEnter \"outcome (outcome)\"", message.threadID);
+		
 		flag1 = true;
 		currentstep+=1;
 		//getName(api, message.senderID, function(err, obj) {
@@ -324,9 +324,11 @@ var x = function (err, api) {
 		console.log(fullname);
 		getID(api, fullname, message.threadID, function(err, obj) {
 			if (err) {
+				api.sendMessage("We were unable to find this user in this group chat. Please enter the user's full name.", message.threadID);
 				console.log(err);
 				currentstep -= 1;
 			} else {
+				api.sendMessage("Please enter the winning condition or description of your bet. \r\nEnter \"outcome (outcome)\"", message.threadID);
 				console.log(obj);
 				currentP2ID = obj;
 			}
